@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Add Happy Place</string>
+    <string name="note_text_no_happy_places_found_yet">No Happy Places Found yet. Kindly add one.</string>
+</resources>

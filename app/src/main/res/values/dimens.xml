@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="no_records_available_text_size">16sp</dimen>
+    <dimen name="item_main_cv_margin_start">10dp</dimen>
+    <dimen name="item_main_cv_margin_end">10dp</dimen>
+    <dimen name="item_main_cv_ll_padding">5dp</dimen>
+</resources>
