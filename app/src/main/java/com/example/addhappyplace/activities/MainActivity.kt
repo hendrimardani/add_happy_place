@@ -31,10 +31,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupMainRecyclerView(happyPlaceList: ArrayList<HappyPlaceModel>) {
+        val countItem = happyPlaceList.size
+
         binding.rvMainList.layoutManager = LinearLayoutManager(this)
-//        binding.rvMainList.setHasFixedSize(true)
         val mainAdapter = MainAdapter(happyPlaceList)
         binding.rvMainList.adapter = mainAdapter
+
+        // To scrolling automatic when data entered
+        binding.rvMainList
+            .smoothScrollToPosition(countItem - 1)
+
+        // When input data automatically to last index
+        binding.rvMainList
+            .layoutManager!!.smoothScrollToPosition(binding
+                .rvMainList, null, countItem - 1)
     }
 
 
