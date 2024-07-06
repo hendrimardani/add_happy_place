@@ -8,12 +8,23 @@ import com.example.addhappyplace.databinding.ItemMainBinding
 import com.example.addhappyplace.models.HappyPlaceModel
 
 class MainAdapter(val items: ArrayList<HappyPlaceModel>) : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
+    private var onClickListener: OnClickListener? = null
 
     class ViewHolder(binding: ItemMainBinding) : RecyclerView.ViewHolder(binding.root) {
         val iv = binding.ivMain
         val title = binding.tvTitleMain
         val desc = binding.tvDescMain
 
+    }
+
+    // When clicking on a item adapter
+    interface OnClickListener {
+
+        fun onClick(position: Int, model: HappyPlaceModel)
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,5 +41,11 @@ class MainAdapter(val items: ArrayList<HappyPlaceModel>) : RecyclerView.Adapter<
         holder.iv.setImageURI(Uri.parse(item.image))
         holder.title.text = item.title
         holder.desc.text = item.description
+
+        holder.itemView.setOnClickListener{
+            if (onClickListener != null) {
+                onClickListener!!.onClick(position, item)
+            }
+        }
     }
 }

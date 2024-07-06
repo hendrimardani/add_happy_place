@@ -1,5 +1,6 @@
 package com.example.addhappyplace.activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabAddHappyPlace.setOnClickListener {
             val intent = Intent(this@MainActivity, AddHappyPlaceActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE)
         }
 
         getHappyPlacesListFromLocalDB()
@@ -45,6 +46,13 @@ class MainActivity : AppCompatActivity() {
         binding.rvMainList
             .layoutManager!!.smoothScrollToPosition(binding
                 .rvMainList, null, countItem - 1)
+
+        mainAdapter.setOnClickListener(object : MainAdapter.OnClickListener{
+            override fun onClick(position: Int, model: HappyPlaceModel) {
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                startActivity(intent)
+            }
+        })
     }
 
 
@@ -84,5 +92,21 @@ class MainActivity : AppCompatActivity() {
                 R.style.Base_Theme_AddHappyPlace
             )
         }
+    }
+
+    // Taking data class from database when it clicks the add button on AddHappyPlaceActivity
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                getHappyPlacesListFromLocalDB()
+            } else {
+                Log.e("Activity", "Cancelled or Back Pressed")
+            }
+        }
+    }
+
+    companion object {
+        var MAIN_ACTIVITY_REQUEST_CODE = 1
     }
 }

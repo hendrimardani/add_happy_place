@@ -124,12 +124,14 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     val dbHandler = DatabaseHandler(this)
                     val addHandler = dbHandler.addHappyPlace(happyPlaceModel)
                     Log.e("Saved Image", "Ini add Handler $addHandler")
-                    val intent = Intent(this@AddHappyPlaceActivity, MainActivity::class.java)
-                    startActivity(intent)
+//                    val intent = Intent(this@AddHappyPlaceActivity, MainActivity::class.java)
+//                    startActivity(intent)
                     if (addHandler > 0) {
-                        Toast.makeText(this@AddHappyPlaceActivity,
-                            "The happy place details are inserted succesfully",
-                            Toast.LENGTH_LONG).show()
+                        setResult(Activity.RESULT_OK)
+                        finish()
+//                        Toast.makeText(this@AddHappyPlaceActivity,
+//                            "The happy place details are inserted succesfully",
+//                            Toast.LENGTH_LONG).show()
                     }
                 } else Toast.makeText(this@AddHappyPlaceActivity, "Fill the Blank !", Toast.LENGTH_LONG).show()
             }
