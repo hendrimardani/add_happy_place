@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         getHappyPlacesListFromLocalDB()
 
+
         val editSwipeHandler = object : SwipeToEditCallback(this@MainActivity) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = binding.rvMainList.adapter as MainAdapter

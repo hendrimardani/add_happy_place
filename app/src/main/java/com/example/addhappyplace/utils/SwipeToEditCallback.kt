@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
  * A abstract class which we will use for edit feature.
  */
 abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-
     private val editIcon = ContextCompat.getDrawable(context, R.drawable.edit_24px)
     private val intrinsicWidth = editIcon!!.intrinsicWidth
     private val intrinsicHeight = editIcon!!.intrinsicHeight

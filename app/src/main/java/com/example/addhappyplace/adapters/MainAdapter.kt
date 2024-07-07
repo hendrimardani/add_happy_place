@@ -40,6 +40,7 @@ class MainAdapter(val context: Context, val items: ArrayList<HappyPlaceModel>) :
         return items.size
     }
 
+    // Set Item to EditText from Database
     fun notifyEditItem(activity: Activity, position: Int, requestCode: Int) {
         val intent = Intent(context, AddHappyPlaceActivity:: class.java)
         intent.putExtra(MainActivity.EXTRA_DETAILS, items[position])
