@@ -71,22 +71,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvAddImage.setOnClickListener(this)
         binding.btnSave.setOnClickListener(this)
 
-        if (intent.hasExtra(MainActivity.EXTRA_DETAILS)) {
-            mHappyPlaceDetails = intent.getParcelableExtra(MainActivity.EXTRA_DETAILS)
-        }
-
-        if (mHappyPlaceDetails != null) {
-            supportActionBar!!.title = "Edit Happy Place"
-
-            binding.etTitle.setText(mHappyPlaceDetails!!.title)
-            binding.etDescription.setText(mHappyPlaceDetails!!.description)
-            binding.etDate.setText(mHappyPlaceDetails!!.date)
-            binding.etLocation.setText(mHappyPlaceDetails!!.location)
-            mLatitude = mHappyPlaceDetails!!.latitude
-            mLongitude = mHappyPlaceDetails!!.longitude
-            saveImageToInternalStorage = Uri.parse(mHappyPlaceDetails!!.image)
-            binding.ivAddImage.setImageURI(saveImageToInternalStorage)
-        }
+        // Edit item on edit text
+        editValue()
     }
 
     private fun setToolBar() {
@@ -103,6 +89,26 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
         }
         binding.tbAddHappyPlace.setNavigationOnClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun editValue() {
+        if (intent.hasExtra(MainActivity.EXTRA_DETAILS)) {
+            mHappyPlaceDetails = intent.getParcelableExtra(MainActivity.EXTRA_DETAILS)
+        }
+
+        if (mHappyPlaceDetails != null) {
+            supportActionBar!!.title = "Edit Happy Place"
+
+            binding.etTitle.setText(mHappyPlaceDetails!!.title)
+            binding.etDescription.setText(mHappyPlaceDetails!!.description)
+            binding.etDate.setText(mHappyPlaceDetails!!.date)
+            binding.etLocation.setText(mHappyPlaceDetails!!.location)
+            mLatitude = mHappyPlaceDetails!!.latitude
+            mLongitude = mHappyPlaceDetails!!.longitude
+            saveImageToInternalStorage = Uri.parse(mHappyPlaceDetails!!.image)
+            binding.ivAddImage.setImageURI(saveImageToInternalStorage)
+            binding.btnSave.text = "Update"
         }
     }
 
@@ -130,7 +136,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 if (title!!.isNotEmpty() && description!!.isNotEmpty() && location!!.isNotEmpty()
                     && image.isNotEmpty()) {
                     val happyPlaceModel = HappyPlaceModel(
-                        id = 0,
+                        id = if (mHappyPlaceDetails == null) 0 else mHappyPlaceDetails!!.id,
                         title = binding.etTitle.text.toString(),
                         description = binding.etDescription.text.toString(),
                         date = binding.etDate.text.toString(),
@@ -140,16 +146,19 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                         longitude = mLongitude
                     )
                     val dbHandler = DatabaseHandler(this)
-                    val addHandler = dbHandler.addHappyPlace(happyPlaceModel)
-                    Log.e("Saved Image", "Ini add Handler $addHandler")
-//                    val intent = Intent(this@AddHappyPlaceActivity, MainActivity::class.java)
-//                    startActivity(intent)
-                    if (addHandler > 0) {
-                        setResult(Activity.RESULT_OK)
-                        finish()
-//                        Toast.makeText(this@AddHappyPlaceActivity,
-//                            "The happy place details are inserted succesfully",
-//                            Toast.LENGTH_LONG).show()
+                    if (mHappyPlaceDetails == null) {
+                        val addHandler = dbHandler.addHappyPlace(happyPlaceModel)
+                        Log.e("Saved Image", "Ini add Handler $addHandler")
+                        if (addHandler > 0) {
+                            setResult(Activity.RESULT_OK)
+                            finish()
+                        }
+                    } else {
+                        val updateHandler = dbHandler.updateHappyPlace(happyPlaceModel)
+                        if (updateHandler > 0) {
+                            setResult(Activity.RESULT_OK)
+                            finish()
+                        }
                     }
                 } else Toast.makeText(this@AddHappyPlaceActivity, "Fill the Blank !", Toast.LENGTH_LONG).show()
             }
