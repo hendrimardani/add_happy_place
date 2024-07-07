@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * A abstract class which we will use for edit feature.
  */
-abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-    private val editIcon = ContextCompat.getDrawable(context, R.drawable.edit_24px)
+abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    private val editIcon = ContextCompat.getDrawable(context, R.drawable.delete_24px)
     private val intrinsicWidth = editIcon!!.intrinsicWidth
     private val intrinsicHeight = editIcon!!.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.GREEN
+    private val backgroundColor = Color.RED
     private val clearPaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
@@ -55,16 +55,16 @@ abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCal
             return
         }
 
-        // Draw the green edit background
+        // Draw the red delete background
         background.color = backgroundColor
-        background.setBounds(itemView.left + dX.toInt(), itemView.top, itemView.left, itemView.bottom)
+        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
         background.draw(c)
 
         // Calculate position of edit icon
         val editIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
         val editIconMargin = (itemHeight - intrinsicHeight)
-        val editIconLeft = itemView.left + editIconMargin - intrinsicWidth
-        val editIconRight = itemView.left + editIconMargin
+        val editIconLeft = itemView.right - editIconMargin - intrinsicWidth
+        val editIconRight = itemView.right - editIconMargin
         val editIconBottom = editIconTop + intrinsicHeight
 
         // Draw the delete icon

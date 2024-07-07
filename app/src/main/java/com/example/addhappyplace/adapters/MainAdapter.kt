@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.addhappyplace.activities.AddHappyPlaceActivity
 import com.example.addhappyplace.activities.MainActivity
+import com.example.addhappyplace.database.DatabaseHandler
 import com.example.addhappyplace.databinding.ItemMainBinding
 import com.example.addhappyplace.models.HappyPlaceModel
 
@@ -40,12 +41,23 @@ class MainAdapter(val context: Context, val items: ArrayList<HappyPlaceModel>) :
         return items.size
     }
 
+    // Update handler
     // Set Item to EditText from Database
     fun notifyEditItem(activity: Activity, position: Int, requestCode: Int) {
         val intent = Intent(context, AddHappyPlaceActivity:: class.java)
         intent.putExtra(MainActivity.EXTRA_DETAILS, items[position])
         activity.startActivityForResult(intent, requestCode)
         notifyItemChanged(position)
+    }
+
+    // Delete handler
+    fun removeAt(position: Int){
+        val dbHandler = DatabaseHandler(context)
+        val deleteHandler = dbHandler.deleteHappyPlace(items[position])
+        if (deleteHandler > 0) {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
