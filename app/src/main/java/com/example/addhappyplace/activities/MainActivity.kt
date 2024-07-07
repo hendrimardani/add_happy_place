@@ -6,12 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.addhappyplace.R
 import com.example.addhappyplace.adapters.MainAdapter
 import com.example.addhappyplace.database.DatabaseHandler
 import com.example.addhappyplace.databinding.ActivityMainBinding
 import com.example.addhappyplace.models.HappyPlaceModel
+import com.example.addhappyplace.utils.SwipeToEditCallback
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -29,13 +32,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         getHappyPlacesListFromLocalDB()
+
+        val editSwipeHandler = object : SwipeToEditCallback(this@MainActivity) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = binding.rvMainList.adapter as MainAdapter
+                adapter.notifyEditItem(this@MainActivity, viewHolder.adapterPosition, MAIN_ACTIVITY_REQUEST_CODE)
+            }
+        }
+
+        val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
+        editItemTouchHelper.attachToRecyclerView(binding.rvMainList)
     }
 
     private fun setupMainRecyclerView(happyPlaceList: ArrayList<HappyPlaceModel>) {
         val countItem = happyPlaceList.size
 
         binding.rvMainList.layoutManager = LinearLayoutManager(this)
-        val mainAdapter = MainAdapter(happyPlaceList)
+        val mainAdapter = MainAdapter(applicationContext, happyPlaceList)
         binding.rvMainList.adapter = mainAdapter
 
         // To scrolling automatic when data entered
@@ -50,11 +63,11 @@ class MainActivity : AppCompatActivity() {
         mainAdapter.setOnClickListener(object : MainAdapter.OnClickListener{
             override fun onClick(position: Int, model: HappyPlaceModel) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                intent.putExtra(EXTRA_DETAILS, model)
                 startActivity(intent)
             }
         })
     }
-
 
     private fun getHappyPlacesListFromLocalDB() {
         val dbHandler = DatabaseHandler(this)
@@ -108,5 +121,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var MAIN_ACTIVITY_REQUEST_CODE = 1
+        var EXTRA_DETAILS = "extra_details"
     }
 }
